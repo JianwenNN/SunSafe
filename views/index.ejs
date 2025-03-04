@@ -1,15 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SunSafe</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <div class="row justify-content-center">
+        <div class="card" style="width: 18rem;">
+            <img src="<%= imageURL %>" class="card-img-top" alt="<%= urlStr %>">
+            <div class="card-body">
+              <p class="card-text"><%= suggestion %></p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container mt-5">
+        <h2 class="mb-4">Enter Coordinates</h2>
+        <form id="coordinateForm">
+            <div class="container mb-3">
+                <label for="latitude" class="form-label">Latitude (-90.00 to 90.00)</label>
+                <input type="number" class="form-control" id="latitude" name="latitude" min="-90" max="90" step="0.01" required>
+                <div class="invalid-feedback">Please enter a valid latitude between -90.00 and 90.00.</div>
+            </div>
+            <div class="container mb-3">
+                <label for="longitude" class="form-label">Longitude (-180.00 to 180.00)</label>
+                <input type="number" class="form-control" id="longitude" name="longitude" min="-180" max="180" step="0.01" required>
+                <div class="invalid-feedback">Please enter a valid longitude between -180.00 and 180.00.</div>
+            </div>
+            <div class="container">
+                <button type="button" class="btn btn-outline-primary" id="getLocationBtn">Get Current Location</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            
+        </form>
+    </div>
 
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Script -->
+    <script>
+        document.getElementById('getLocationBtn').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(setPosition, showError);
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        });
+
+        function setPosition(position) {
+            document.getElementById('latitude').value = position.coords.latitude.toFixed(2);
+            document.getElementById('longitude').value = position.coords.longitude.toFixed(2);
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert('User denied the request for Geolocation.');
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert('Location information is unavailable.');
+                    break;
+                case error.TIMEOUT:
+                    alert('The request to get user location timed out.');
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert('An unknown error occurred.');
+                    break;
+            }
+        }
+    </script>
+</body>
 </html>
